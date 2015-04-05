@@ -3,43 +3,34 @@
  */
 package concurrency.examples.producerconsumer;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
+ * Use blocking queue for producer-consumer
+ * 
  * @author anchalagarwal
  *
  */
 public class Stock {
-	private List<StockItem> myItemList = new ArrayList<StockItem>(0);
-	
 
-	public StockItem getStockItem() throws InterruptedException {
-		StockItem theStockItem = null;
-		synchronized (this) {
-			while (myItemList.isEmpty()) {
-				System.out
-						.println("Stock item list is empty, so waiting for item..");
-				wait();
-			}
-			theStockItem = myItemList.remove(0);
-			// System.out.println("Removed stock item.");
-			notify();
-		}
-		return theStockItem;
+	private final BlockingQueue<Integer> myItemList;
+
+	/**
+	 * @param capacity
+	 */
+	public Stock(int capacity) {
+		myItemList = new LinkedBlockingQueue<Integer>(capacity);
 	}
 
-	public void putStockItem(StockItem parStockItem)
-			throws InterruptedException {
-		synchronized (this) {
-			while (myItemList.size() > 1) {
-				System.out
-						.println("Stock item list is full, so waiting for empty space..");
-				wait();
-			}
-			// System.out.println("Adding stock item.");
-			myItemList.add(parStockItem);
-			notify();
-		}
+	public Integer getStockItem() throws InterruptedException {
+		// System.out.println("Removed stock item.");
+		return myItemList.take();
+	}
+
+	public void putStockItem(Integer parItem) throws InterruptedException {
+
+		// System.out.println("Adding stock item.");
+		myItemList.put(parItem);
 	}
 }
