@@ -66,16 +66,16 @@ public class CountDownLatchTest {
 
 	public static void main(String[] args) throws InterruptedException {
 		CountDownLatch latch = new CountDownLatch(2);
-		Thread sumThread = new SumThread(latch, 100, "SumThread");
-		Thread productThread = new ProductThread(latch, 10,
+		SumThread sumThread = new SumThread(null, 100, "SumThread");
+		ProductThread productThread = new ProductThread(null, 10,
 				"ProductThread");
 		sumThread.start();
 		productThread.start();
 		System.out.println("Waiting for sum and product threads to finish");
 		latch.await();
 		System.out.println("latch current count " + latch.getCount());
-		System.out.println("Sum of numbers :: " + ((SumThread)sumThread).getSum());
-		System.out.println("Product of numbers :: " + ((ProductThread)productThread).getProduct());
+		System.out.println("Sum of numbers :: " + sumThread.getSum());
+		System.out.println("Product of numbers :: " + productThread.getProduct());
 
 	}
 
